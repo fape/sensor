@@ -45,9 +45,13 @@ $startTime = strftime('%Y-%m-%d %H:%M:%S', $start / 1000);
 //$endTime = gmstrftime('%Y-%m-%d %H:%M:%S', $end / 1000);
 $endTime = strftime('%Y-%m-%d %H:%M:%S', $end / 1000);
 
-if( $range < 6 * 3600 * 1000 )
+if( $range < 3 * 3600 * 1000 )
 {
 	$group_by="time";
+}
+elseif($range < 10 * 3600 * 1000)
+{
+	$group_by = " ROUND( UNIX_TIMESTAMP( TIME ) / ( 5 * 60 ) ) ";
 }
 // one day range loads 10 min data
 elseif ($range < 2 * 24 * 3600 * 1000) {
