@@ -1,0 +1,130 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Sensors</title>
+		<style type="text/css">
+			html, body, div#container { margin: 0; border: 0 none; padding: 0; height: 100%; min-height: 100%; }
+		</style>
+		<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+		<script src="http://code.highcharts.com/stock/highstock.js"></script>
+		<script src="http://code.highcharts.com/stock/modules/exporting.js"></script>
+		<script type="text/javascript">
+$(function() {
+
+    Highcharts.setOptions({ // This is for all plots, change Date axis to local timezone
+                global : {
+                    useUTC : false
+                }
+            });
+
+	$.getJSON('data.php?sensor=2&callback=?', function(data) {
+		
+		// Add a null value for the end date 
+		data = [].concat(data, [[new Date().getTime(), null]]);
+				
+		// create the chart
+		$('#container').highcharts('StockChart', {
+
+			chart : {
+				type: 'spline',
+				zoomType: 'x',
+				
+			},
+
+			navigator : {
+				adaptToUpdatedData: false,
+				series : {
+					data : data	
+				}
+			},
+
+			scrollbar: {
+				liveRedraw: false
+			},
+			
+			/*title: {
+				text: 'AAPL history by the minute from 1998 to 2011'
+			},
+			
+			subtitle: {
+				text: 'Displaying 1.7 million data points in Highcharts Stock by async server loading'
+			},*/
+			
+			rangeSelector : {
+				buttons: [{
+					type: 'hour',
+					count: 1,
+					text: '1h'
+				}, {
+					type: 'day',
+					count: 1,
+					text: '1d'
+				}, {
+					type: 'month',
+					count: 1,
+					text: '1m'
+				}, {
+					type: 'year',
+					count: 1,
+					text: '1y'
+				}, {
+					type: 'all',
+					text: 'All'
+				}],
+				inputEnabled: false, // it supports only days
+				selected : 4 // all
+			},
+			
+			xAxis : {
+				events : {
+					afterSetExtremes : afterSetExtremes
+				},
+				minRange: 3600 * 1000 // one hour
+			},
+
+			series : [{
+				data : data,
+				name: 'sensor',
+				dataGrouping: {
+					enabled: false
+				},
+				marker : {
+						enabled : true,
+						radius : 3
+					}
+			}],
+			tooltip : {
+				valueDecimals: 2,
+				valueSuffix: ' °C'
+			}
+		});
+	});
+});
+
+
+/**
+ * Load new data depending on the selected min and max
+ */
+function afterSetExtremes(e) {
+
+	var url,
+		currentExtremes = this.getExtremes(),
+		range = e.max - e.min;
+	var chart = $('#container').highcharts();
+	chart.showLoading('Loading data from server...');
+	$.getJSON('data.php?sensor=2&start='+ Math.round(e.min) +
+			'&end='+ Math.round(e.max) +'&callback=?', function(data) {
+		
+		chart.series[0].setData(data);
+		chart.hideLoading();
+	});
+	
+}
+
+		</script>
+	</head>
+	<body>
+		<div id="container"></div>
+	</body>
+</html>
