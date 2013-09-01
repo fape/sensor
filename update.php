@@ -10,12 +10,12 @@ function err($str)
 require_once('config.inc.php');
 
 $sensor = isset($_GET['sensor'])? $_GET['sensor'] : null;
-if (!$sensor || !preg_match('/^[0-9a-f-]+$/', $sensor)) {
+if (!$sensor || !preg_match('/^[0-9a-z-]+$/', $sensor)) {
 	err(1);
 }
 
 $data = isset($_GET['data'])? $_GET['data'] : null;
-if (!$data || !preg_match('/^[0-9\.]+$/', $data)) {
+if (!$data || !preg_match('/^[0-9\.-]+$/', $data)) {
 	err(2);
 }
 
