@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS `data` (
   PRIMARY KEY (`id`),
   KEY `time` (`time`),
   KEY `sensor_id` (`sensor_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci AUTO_INCREMENT=1122 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci ;
 
 CREATE TABLE IF NOT EXISTS `sensor` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -25,13 +25,13 @@ CREATE TABLE IF NOT EXISTS `sensor` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `uuid` (`uuid`),
   KEY `unit_id` (`unit_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci ;
 
 CREATE TABLE IF NOT EXISTS `unit` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) COLLATE utf8_hungarian_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci ;
 
 
 ALTER TABLE `data`
