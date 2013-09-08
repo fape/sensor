@@ -85,7 +85,7 @@ if ("data" === $type) {
 
 			select 
 				data.sensor_id as id,
-				min(unix_timestamp(data.time) * 1000) as datetime,
+				min(floor(unix_timestamp(data.time)/60 )* 60 * 1000) as datetime,
 				avg(data.data) as data
 			from data 
 			INNER JOIN sensor ON sensor.id = data.sensor_id
