@@ -69,13 +69,13 @@ function getData() {
 				liveRedraw: false
 			},
 			
-			/*title: {
-				text: 'AAPL history by the minute from 1998 to 2011'
+			title: {
+				text: 'Sensor portal'
 			},
 			
 			subtitle: {
-				text: 'Displaying 1.7 million data points in Highcharts Stock by async server loading'
-			},*/
+				text: 'https://github.com/fape/sensor'
+			},
 			
 			rangeSelector : {
 				buttons: [{
@@ -112,7 +112,7 @@ function getData() {
 			series : seriesOptions,
 			tooltip : {
 				valueDecimals: 2,
-				valueSuffix: ' '+sensors[0][2]
+				valueSuffix: sensors[0][2]
 			}
 		});
 		
