@@ -33,7 +33,11 @@ function getData() {
 		$.each(sensors, function( key, value ) {
 			id = value[0];
 			// Add a null value for the end date 
-			data[id] = [].concat(data[id], [[new Date().getTime(), null]]);
+			if(data[id] === undefined) {
+				data[id] = [[new Date().getTime(), null]];
+			} else {
+				data[id] = [].concat(data[id], [[new Date().getTime(), null]]);
+			}
 			seriesOptions.push({
 				data : data[id],
 				name: value[1],
