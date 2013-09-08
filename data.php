@@ -92,7 +92,7 @@ if ("data" === $type) {
 			where time between '$startTime' and '$endTime' 
 			and sensor.unit_id = $unit_id
 			group by $group_by, data.sensor_id
-			order by time
+			order by sensor_id, time 
 			limit 0,5000
 
 
@@ -114,7 +114,7 @@ if ("data" === $type) {
 	header('Content-Type: text/javascript');
 	
 	echo "/* console.log(' start = $start, end = $end, startTime = $startTime, endTime = $endTime '); */\n";
-	echo $callback ."(".json_encode($datas, JSON_NUMERIC_CHECK ).");";
+	echo $callback ."(".json_encode($datas, JSON_NUMERIC_CHECK | JSON_PRETTY_PRINT ).");";
 } 
 else if ("sensor" === $type) {
 
@@ -133,7 +133,7 @@ else if ("sensor" === $type) {
 	}
 	// print it
 	header('Content-Type: text/javascript');
-	echo $callback ."(".json_encode($rows, JSON_NUMERIC_CHECK ).");";
+	echo $callback ."(".json_encode($rows, JSON_NUMERIC_CHECK | JSON_PRETTY_PRINT ).");";
 }
 ?>
 
