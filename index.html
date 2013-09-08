@@ -10,18 +10,44 @@
 		<script src="http://code.highcharts.com/stock/highstock.js"></script>
 		<script src="http://code.highcharts.com/stock/modules/exporting.js"></script>
 		<script type="text/javascript">
+	 var unit_id=1;
+	 var sensors = [];
 $(function() {
+	$.getJSON('data.php?type=sensor&unit='+unit_id+'&callback=?', function(data) {
+		sensors = data;
+		getData();
+	});
 
     Highcharts.setOptions({ // This is for all plots, change Date axis to local timezone
                 global : {
                     useUTC : false
                 }
             });
+});
 
-	$.getJSON('data.php?sensor=2&callback=?', function(data) {
+function getData() {
+	$.getJSON('data.php?type=data&unit='+unit_id+'&callback=?', function(data) {
+
+		seriesOptions = []
 		
-		// Add a null value for the end date 
-		data = [].concat(data, [[new Date().getTime(), null]]);
+		$.each(sensors, function( key, value ) {
+			id = value[0];
+			// Add a null value for the end date 
+			data[id] = [].concat(data[id], [[new Date().getTime(), null]]);
+			seriesOptions.push({
+				data : data[id],
+				name: value[1],
+				dataGrouping: {
+					enabled: false
+				},
+				marker : {
+						enabled : true,
+						radius : 3
+					}
+			});
+		});
+		
+	
 				
 		// create the chart
 		$('#container').highcharts('StockChart', {
@@ -35,7 +61,7 @@ $(function() {
 			navigator : {
 				adaptToUpdatedData: false,
 				series : {
-					data : data	
+					data : data[sensors[0][0]]
 				}
 			},
 
@@ -83,24 +109,16 @@ $(function() {
 				minRange: 3600 * 1000 // one hour
 			},
 
-			series : [{
-				data : data,
-				name: 'sensor',
-				dataGrouping: {
-					enabled: false
-				},
-				marker : {
-						enabled : true,
-						radius : 3
-					}
-			}],
+			series : seriesOptions,
 			tooltip : {
 				valueDecimals: 2,
-				valueSuffix: ' °C'
+				valueSuffix: ' '+sensors[0][2]
 			}
 		});
+		
+		$("#loading").hide();
 	});
-});
+}
 
 
 /**
@@ -113,10 +131,12 @@ function afterSetExtremes(e) {
 		range = e.max - e.min;
 	var chart = $('#container').highcharts();
 	chart.showLoading('Loading data from server...');
-	$.getJSON('data.php?sensor=2&start='+ Math.round(e.min) +
+	$.getJSON('data.php?type=data&unit='+unit_id+'&start='+ Math.round(e.min) +
 			'&end='+ Math.round(e.max) +'&callback=?', function(data) {
 		
-		chart.series[0].setData(data);
+		for(i=0; i< sensors.length; i++) {
+			chart.series[i].setData(data[sensors[i][0]]);
+		}
 		chart.hideLoading();
 	});
 	
@@ -125,6 +145,7 @@ function afterSetExtremes(e) {
 		</script>
 	</head>
 	<body>
+		<div id="loading">Loading data from server...</div>
 		<div id="container"></div>
 	</body>
 </html>
